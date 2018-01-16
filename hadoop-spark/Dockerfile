@@ -36,34 +36,34 @@ RUN \
 ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
 
 # Download Hadoop package
-ADD http://apache.mirrors.tds.net/hadoop/common/hadoop-2.6.0/hadoop-2.6.0.tar.gz /tmp/
+ADD http://apache.mirrors.tds.net/hadoop/common/hadoop-2.7.5/hadoop-2.7.5.tar.gz /tmp/
 
 # Download Spark package
-ADD http://d3kbcqa49mib13.cloudfront.net/spark-1.4.0-bin-hadoop2.6.tgz /tmp/
+ADD http://d3kbcqa49mib13.cloudfront.net/spark-2.2.0-bin-hadoop2.7.tgz /tmp/
 
 # Create /opt directory
 RUN mkdir -p /opt/
 
 # Unpack hadoop into /opt/ and set HADOOP_HOME
-RUN tar -xzf /tmp/hadoop-2.6.0.tar.gz -C /opt/
+RUN tar -xzf /tmp/hadoop-2.7.5.tar.gz -C /opt/
 
 # Copy hadoop confs
-ADD /hadoop-conf /opt/hadoop-2.6.0/etc/hadoop/
+ADD /hadoop-conf /opt/hadoop-2.7.5/etc/hadoop/
 
 # Set Hadoop sepcific environment variables
-ENV HADOOP_HOME /opt/hadoop-2.6.0
+ENV HADOOP_HOME /opt/hadoop-2.7.5
 ENV HADOOP_CONF_DIR="${HADOOP_HOME}/etc/hadoop"
 ENV HADOOP_LIBEXEC_DIR="${HADOOP_HOME}/libexec"
 
-RUN sed -i 's/export JAVA_HOME=${JAVA_HOME}/export JAVA_HOME=\/usr\/lib\/jvm\/java-8-oracle/' /opt/hadoop-2.6.0/etc/hadoop/hadoop-env.sh
+RUN sed -i 's/export JAVA_HOME=${JAVA_HOME}/export JAVA_HOME=\/usr\/lib\/jvm\/java-8-oracle/' /opt/hadoop-2.7.5/etc/hadoop/hadoop-env.sh
 
 RUN mkdir -p /opt/data/apps/tmp
 RUN mkdir -p /opt/data/apps/dfs/name
 RUN mkdir -p /opt/data/apps/dfs/data
 
 # Unpack spark into /opt and set SPARK_HOME
-RUN tar -xzf /tmp/spark-1.4.0-bin-hadoop2.6.tgz -C /opt/
-ENV SPARK_HOME /opt/spark-1.4.0-bin-hadoop2.6
+RUN tar -xzf /tmp/spark-2.2.0-bin-hadoop2.7.tgz -C /opt/
+ENV SPARK_HOME /opt/spark-2.2.0-bin-hadoop2.7
 
 ENV PATH $PATH:${HADOOP_HOME}/sbin/:${HADOOP_HOME}/bin:${SPARK_HOME}/sbin/:${SPARK_HOME}/bin
 

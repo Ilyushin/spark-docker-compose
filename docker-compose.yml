@@ -8,7 +8,7 @@ hdfs-namenode:
    # HDFS NameNode WebUI
    - "50070:50070"
  # Adjust according to the resources available on host machine
- cpu_shares: 3000
+ cpu_shares: 8
  mem_limit: 2g
 
 # Container that runs HDFS DataNode service
@@ -21,7 +21,7 @@ hdfs-datanode:
    # NAMENODE_HOSTNAME is the hostname of the container running Namenode service
    - NAMENODE_HOSTNAME=hdfs-namenode-host
  # Adjust according to the resources available on host machine
- cpu_shares: 3000
+ cpu_shares: 8
  mem_limit: 2g
 
 # Container that runs Spark Master and Worker services
@@ -39,7 +39,7 @@ spark-master:
    # NAMENODE_HOSTNAME is the hostname of the container running Namenode service
    - NAMENODE_HOSTNAME=hdfs-namenode-host
  # Adjust according to the resources available on host machine
- cpu_shares: 3000
+ cpu_shares: 8
  mem_limit: 2g
 
 # Container that runs Spark Worker service
@@ -55,5 +55,5 @@ spark-slave:
    # MASTER_HOSTNAME is the hostname of the container running Spark master service
    - MASTER_HOSTNAME=spark-master-host
  # Adjust according to the resources available on host machine
- cpu_shares: 3000
+ cpu_shares: 8
  mem_limit: 2g
