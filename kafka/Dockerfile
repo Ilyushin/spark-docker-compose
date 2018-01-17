@@ -22,22 +22,43 @@ RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so
 # Set environment variables.
 ENV HOME /root
 
-# Install Java.
-RUN \
-  apt-get update && \
-  echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | debconf-set-selections && \
-  add-apt-repository -y ppa:webupd8team/java && \
-  apt-get update && \
-  cd /var/lib/dpkg/info && \
-  sed -i 's|JAVA_VERSION=8u151|JAVA_VERSION=8u161|' oracle-java8-installer.* && \
-  sed -i 's|PARTNER_URL=http://download.oracle.com/otn-pub/java/jdk/8u151-b12/e758a0de34e24606bca991d704f6dcbf/|PARTNER_URL=http://download.oracle.com/otn-pub/java/jdk/8u161-b12/2f38c3b165be4555a1fa6e98c45e0808/|' oracle-java8-installer.*  && \
-  sed -i 's|SHA256SUM_TGZ="c78200ce409367b296ec39be4427f020e2c585470c4eed01021feada576f027f"|SHA256SUM_TGZ="6dbc56a0e3310b69e91bb64db63a485bd7b6a8083f08e48047276380a0e2021e"|' oracle-java8-installer.* && \
-  sed -i 's|J_DIR=jdk1.8.0_151|J_DIR=jdk1.8.0_161|' oracle-java8-installer.*  && \
-  apt-get install -y oracle-java8-installer && \
-  apt-get install -y oracle-java8-set-default
+# install java via wget site oficial oracle
+# note: JAVA_FILE_TAR, JAVA_URL_DOWNLOAD and JAVA_DIR  must be entered manually
+ENV JAVA_FILE_TAR jdk-8u151-linux-x64.tar.gz
+ENV JAVA_URL_DOWNLOAD "http://download.oracle.com/otn-pub/java/jdk/8u162-b12/0da788060d494f5095bf8624735fa2f1/${JAVA_FILE_TAR}"
+ENV JAVA_DIR jdk1.8.0_151
 
-# Define commonly used JAVA_HOME variable
-ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
+# download and extract tar
+RUN cd /opt  && wget -q --no-check-certificate -c --header "Cookie: oraclelicense=accept-securebackup-cookie" ${JAVA_URL_DOWNLOAD} \
+  && tar zxvf ${JAVA_FILE_TAR} && pwd && ls -la \
+   # set default java
+  && update-alternatives --install /usr/bin/java java /opt/${JAVA_DIR}/bin/java 1 \
+  && update-alternatives --install /usr/bin/javac javac /opt/${JAVA_DIR}/bin/javac 1 \
+  && update-alternatives --install /usr/bin/jar jar /opt/${JAVA_DIR}/bin/jar 1 \
+   # set temp env vars
+  && export JAVA_HOME=/opt/${JAVA_DIR} \
+  && export PATH=$PATH:/opt/${JAVA_DIR}/bin:/opt/${JAVA_DIR}/jre/bin \
+  && echo "export JAVA_HOME=/opt/${JAVA_DIR}" >> /etc/environment \
+  && echo "export PATH=$PATH:/opt/${JAVA_DIR}/bin:/opt/${JAVA_DIR}/jre/bin" >> /etc/environment \
+  && ls /opt/${JAVA_DIR} > /dev/null 2>&1
+
+
+# Install Java.
+#RUN \
+#  apt-get update && \
+#  echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | debconf-set-selections && \
+#  add-apt-repository -y ppa:webupd8team/java && \
+#  apt-get update && \
+#  cd /var/lib/dpkg/info && \
+#  sed -i 's|JAVA_VERSION=8u151|JAVA_VERSION=8u161|' oracle-java8-installer.* && \
+#  sed -i 's|PARTNER_URL=http://download.oracle.com/otn-pub/java/jdk/8u151-b12/e758a0de34e24606bca991d704f6dcbf/|PARTNER_URL=http://download.oracle.com/otn-pub/java/jdk/8u161-b12/2f38c3b165be4555a1fa6e98c45e0808/|' oracle-java8-installer.*  && \
+#  sed -i 's|SHA256SUM_TGZ="c78200ce409367b296ec39be4427f020e2c585470c4eed01021feada576f027f"|SHA256SUM_TGZ="6dbc56a0e3310b69e91bb64db63a485bd7b6a8083f08e48047276380a0e2021e"|' oracle-java8-installer.* && \
+#  sed -i 's|J_DIR=jdk1.8.0_151|J_DIR=jdk1.8.0_161|' oracle-java8-installer.*  && \
+#  apt-get install -y oracle-java8-installer && \
+#  apt-get install -y oracle-java8-set-default
+#
+## Define commonly used JAVA_HOME variable
+#ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
 
 ARG KAFKA_VERSION=0.11.2
 ARG SCALA_VERSION=2.12
