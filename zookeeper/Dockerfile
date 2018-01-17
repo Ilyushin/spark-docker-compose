@@ -1,5 +1,14 @@
 FROM ubuntu:14.04
 
+# Install.
+RUN \
+  apt-get update && \
+  apt-get -y upgrade && \
+  apt-get install -y build-essential && \
+  apt-get install -y software-properties-common && \
+  apt-get install -y curl git unzip wget && \
+  apt-get install -y openssh-server
+
 # Install Java.
 RUN \
   echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | debconf-set-selections && \
