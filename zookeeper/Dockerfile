@@ -24,11 +24,11 @@ ENV HOME /root
 
 # Install Java.
 RUN \
- apt-get update && \
+  apt-get update && \
   echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | debconf-set-selections && \
   add-apt-repository -y ppa:webupd8team/java && \
   apt-get update && \
-  apt-get install -y oracle-java8-installer
+  apt-get install oracle-java8-set-default
 
 # Define commonly used JAVA_HOME variable
 ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
