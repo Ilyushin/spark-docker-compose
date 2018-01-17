@@ -1,5 +1,4 @@
 FROM ubuntu:14.04
-MAINTAINER Venki Korukanti (venki.korukanti@gmail.com)
 
 # Install.
 RUN \
