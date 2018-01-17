@@ -1,4 +1,4 @@
-FROM ubuntu:14.04
+FROM teenak/ubuntu-14-04-java8
 
 # Install.
 RUN \
@@ -21,27 +21,6 @@ RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so
 
 # Set environment variables.
 ENV HOME /root
-
-
-# install java via wget site oficial oracle
-# note: JAVA_FILE_TAR, JAVA_URL_DOWNLOAD and JAVA_DIR  must be entered manually
-ENV JAVA_FILE_TAR jdk-8u151-linux-x64.tar.gz
-ENV JAVA_URL_DOWNLOAD "http://download.oracle.com/otn-pub/java/jdk/8u162-b12/0da788060d494f5095bf8624735fa2f1/${JAVA_FILE_TAR}"
-ENV JAVA_DIR jdk1.8.0_151
-
-# download and extract tar
-RUN cd /opt  && wget -q --no-check-certificate -c --header "Cookie: oraclelicense=accept-securebackup-cookie" ${JAVA_URL_DOWNLOAD} \
-  && tar zxvf ${JAVA_FILE_TAR} && pwd && ls -la \
-   # set default java
-  && update-alternatives --install /usr/bin/java java /opt/${JAVA_DIR}/bin/java 1 \
-  && update-alternatives --install /usr/bin/javac javac /opt/${JAVA_DIR}/bin/javac 1 \
-  && update-alternatives --install /usr/bin/jar jar /opt/${JAVA_DIR}/bin/jar 1 \
-   # set temp env vars
-  && export JAVA_HOME=/opt/${JAVA_DIR} \
-  && export PATH=$PATH:/opt/${JAVA_DIR}/bin:/opt/${JAVA_DIR}/jre/bin \
-  && echo "export JAVA_HOME=/opt/${JAVA_DIR}" >> /etc/environment \
-  && echo "export PATH=$PATH:/opt/${JAVA_DIR}/bin:/opt/${JAVA_DIR}/jre/bin" >> /etc/environment \
-  && ls /opt/${JAVA_DIR} > /dev/null 2>&1
 
 # Install Java.
 #RUN \
