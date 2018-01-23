@@ -22,7 +22,7 @@ RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so
 # Set environment variables.
 ENV HOME /root
 
-ARG KAFKA_VERSION=0.11.2
+ARG KAFKA_VERSION=0.11.0.2
 ARG SCALA_VERSION=2.12
 
 #Download Kafka
@@ -37,3 +37,7 @@ VOLUME ["/kafka"]
 
 # Use "exec" form so that it runs as PID 1 (useful for graceful shutdown)
 CMD ["start-kafka.sh"]
+
+
+
+#https://www.apache.org/dist/kafka/0.11.2/kafka_2.12-0.11.2.tgz
