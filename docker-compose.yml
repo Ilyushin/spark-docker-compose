@@ -8,7 +8,7 @@ hdfs-namenode:
    # HDFS NameNode WebUI
    - "50070:50070"
  # Adjust according to the resources available on host machine
- cpu_shares: 8
+ cpu_shares: 2
  mem_limit: 2g
 
 # Container that runs HDFS DataNode service
@@ -21,7 +21,7 @@ hdfs-datanode:
    # NAMENODE_HOSTNAME is the hostname of the container running Namenode service
    - NAMENODE_HOSTNAME=hdfs-namenode-host
  # Adjust according to the resources available on host machine
- cpu_shares: 8
+ cpu_shares: 2
  mem_limit: 2g
 
 # Container that runs Spark Master and Worker services
@@ -39,7 +39,7 @@ spark-master:
    # NAMENODE_HOSTNAME is the hostname of the container running Namenode service
    - NAMENODE_HOSTNAME=hdfs-namenode-host
  # Adjust according to the resources available on host machine
- cpu_shares: 8
+ cpu_shares: 2
  mem_limit: 2g
 
 # Container that runs Spark Worker service
@@ -55,19 +55,19 @@ spark-slave:
    # MASTER_HOSTNAME is the hostname of the container running Spark master service
    - MASTER_HOSTNAME=spark-master-host
  # Adjust according to the resources available on host machine
- cpu_shares: 8
+ cpu_shares: 2
  mem_limit: 2g
 
 zookeeper:
-  image: zookeeper
+  image: zookeeper:3.4
   hostname: zookeeper-host
   ports:
     - "2181:2181"
-  cpu_shares: 8
+  cpu_shares: 2
   mem_limit: 2g
 
 kafka:
-  image: kafka
+  image: wurstmeister/kafka:0.11.0.1
   hostname: kafka-host
   links:
     - zookeeper
@@ -79,5 +79,5 @@ kafka:
       KAFKA_BROKER_ID: 1
       KAFKA_LOG4J_LOGGERS: "kafka.controller=INFO,kafka.producer.async.DefaultEventHandler=INFO,state.change.logger=INFO"
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-  cpu_shares: 8
+  cpu_shares: 2
   mem_limit: 2g
